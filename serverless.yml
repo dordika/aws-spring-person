@@ -1,0 +1,70 @@
+service: spring-person-api
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: java8
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  timeout: 15
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:Query
+            - dynamodb:Scan
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+          Resource:
+            Fn::GetAtt:
+              - PersonDynamoDBTable
+              - Arn
+
+#Packaging information here
+package:
+  artifact: 'target/aws-spring-person-1-shaded.jar'
+
+functions:
+#  createPerson:
+#    handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
+#    events:
+#      - http:
+#          path: persons
+#          method: post
+#    environment: # environment variables
+#      FUNCTION_NAME: createPerson
+
+  createPerson:
+    handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
+    events: # api gateway
+      - http:
+          path: person
+          method: post
+          cors: true
+    environment: # environment variables
+      FUNCTION_NAME: createPerson
+
+# you can add CloudFormation resource templates here
+resources:
+  Resources:
+    PersonDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: person-aws-spring
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: firstName
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: firstName
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
