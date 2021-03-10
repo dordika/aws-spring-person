@@ -29,15 +29,6 @@ package:
   artifact: 'target/aws-spring-person-1-shaded.jar'
 
 functions:
-#  createPerson:
-#    handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
-#    events:
-#      - http:
-#          path: persons
-#          method: post
-#    environment: # environment variables
-#      FUNCTION_NAME: createPerson
-
   createPerson:
     handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
     events: # api gateway
@@ -47,6 +38,16 @@ functions:
           cors: true
     environment: # environment variables
       FUNCTION_NAME: createPerson
+
+  getPerson:
+    handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
+    events: # api gateway
+      - http:
+        path: person/{id}
+        method: get
+    environment: # environment variables
+      FUNCTION_NAME: getPerson
+
 
 # you can add CloudFormation resource templates here
 resources:

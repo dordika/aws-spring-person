@@ -43,6 +43,31 @@ public class FunctionConfiguration {
 		};
 	}
 
+	@Bean
+	public Function<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent> getPerson() {
+		logger.info("Execute Lambda getPerson");
+
+		return value -> {
+			try {
+				// get the 'pathParameters' from input
+				Map<String,String> pathParameters =  value.getPathParameters();
+				String personId = pathParameters.get("id");
+				PersonPojo person = personService.get(personId);
+
+				// send the response back
+				if (person != null) {
+					return createResponseEvent(new ObjectMapper().writeValueAsString(person), 200);
+				} else {
+					return createResponseEvent("Person with id: '" + personId + "' not found.", 404);
+				}
+			} catch (Exception e) {
+				logger.error("Error in retrieving person", e);
+				e.printStackTrace();
+				return new APIGatewayProxyResponseEvent().withStatusCode(500);
+			}
+		};
+	}
+
 	private APIGatewayProxyResponseEvent createResponseEvent(Person person) {
 		logger.info("Execute createResponseEvent method");
 		APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
@@ -51,6 +76,20 @@ public class FunctionConfiguration {
 			responseEvent.setStatusCode(201);
 			responseEvent.setHeaders(createResultHeader());
 			responseEvent.setBody(mapper.writeValueAsString(person));
+		} catch (Exception e) {
+			logger.error("Error executing createResponseEvent method", e);
+			return new APIGatewayProxyResponseEvent().withStatusCode(500);
+		}
+		return responseEvent;
+	}
+
+	private APIGatewayProxyResponseEvent createResponseEvent(String objectBody, int statusCode) {
+		logger.info("Execute createResponseEvent method");
+		APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
+		try {
+			responseEvent.setStatusCode(statusCode);
+			responseEvent.setHeaders(createResultHeader());
+			responseEvent.setBody(objectBody);
 		} catch (Exception e) {
 			logger.error("Error executing createResponseEvent method", e);
 			return new APIGatewayProxyResponseEvent().withStatusCode(500);

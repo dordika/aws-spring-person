@@ -31,4 +31,20 @@ public class PersonServiceImpl implements PersonService {
 			throw e;
 		}
 	}
+
+	@Override
+	public PersonPojo get(String id) throws Exception {
+
+		Person person = personRepository.findById(id).orElse(null);
+		PersonPojo personPojo = null;
+
+		if (person != null) {
+			logger.info("Persons - get(): person - " + person.toString());
+			personPojo = new PersonPojo(person.getFirstName(), person.getLastName());
+		} else {
+			logger.info("Persons - get(): person - Not Found.");
+		}
+
+		return personPojo;
+	}
 }

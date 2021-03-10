@@ -7,4 +7,6 @@ public interface PersonService {
 
 	Person savePerson(PersonPojo requestData) throws Exception;
 
+	PersonPojo get(String id) throws Exception;
+
 }
