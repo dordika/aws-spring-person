@@ -5,8 +5,8 @@ import com.serverless.awsspringperson.person.dto.PersonPojo;
 
 public interface PersonService {
 
-	Person savePerson(PersonPojo requestData) throws Exception;
+	Person savePerson(PersonPojo requestData);
 
-	PersonPojo get(String id) throws Exception;
+	PersonPojo get(String id);
 
 }

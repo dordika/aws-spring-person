@@ -17,7 +17,7 @@ public class PersonServiceImpl implements PersonService {
 	PersonRepository personRepository;
 
 	@Override
-	public Person savePerson(PersonPojo personPojo) throws Exception {
+	public Person savePerson(PersonPojo personPojo)  {
 		logger.info("Saving person {} into DB", personPojo);
 		Person transientPerson = new Person();
 		try {
@@ -33,7 +33,7 @@ public class PersonServiceImpl implements PersonService {
 	}
 
 	@Override
-	public PersonPojo get(String id) throws Exception {
+	public PersonPojo get(String id) {
 
 		Person person = personRepository.findById(id).orElse(null);
 		PersonPojo personPojo = null;
