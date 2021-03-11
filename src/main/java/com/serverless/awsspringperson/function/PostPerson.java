@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class PostPerson extends AbstractAwsApiGatewayLambdaFunction<PersonPojo, PersonPojo> {
+public class PostPerson extends AbstractAwsApiGatewayLambdaFunction<PersonPojo, Person> {
 
     private static Logger logger = LoggerFactory.getLogger(PostPerson.class);
 
@@ -23,13 +23,13 @@ public class PostPerson extends AbstractAwsApiGatewayLambdaFunction<PersonPojo, 
     }
 
     @Override
-    public Response<PersonPojo> apply(Request<PersonPojo> request) {
+    public Response<Person> apply(Request<PersonPojo> request) {
         logger.info("Execute Lambda createPerson");
         PersonPojo personPojo = request.getBody();
         Person person = personService.savePerson(personPojo);
-        return BasicResponse.<PersonPojo>builder()
+        return BasicResponse.<Person>builder()
                 .statusCode(201)
-                .body(personPojo)
+                .body(person)
                 .build();
     }
 }

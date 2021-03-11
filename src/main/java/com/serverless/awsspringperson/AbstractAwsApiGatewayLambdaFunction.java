@@ -76,13 +76,6 @@ public abstract class AbstractAwsApiGatewayLambdaFunction<I, O> implements Funct
         }
     }
 
-    private String extractUri(APIGatewayProxyRequestEvent event) {
-        String hostname = event.getHeaders().get("Host");
-        String stage = event.getRequestContext().getStage();
-        String resource = event.getResource();
-        return String.format("https://%s/%s%s", hostname, stage, resource);
-    }
-
     private APIGatewayProxyResponseEvent toEvent(Response<O> response) {
         String body = toJson(response.getBody());
         return new APIGatewayProxyResponseEvent()

@@ -47,7 +47,7 @@ functions:
     name: getPerson
     events:
       - http:
-          path: persons
+          path: persons/{id}
           method: get
 
 # you can add CloudFormation resource templates here
@@ -60,13 +60,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: firstName
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-          - AttributeName: firstName
-            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

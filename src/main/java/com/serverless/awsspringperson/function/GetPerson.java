@@ -30,6 +30,7 @@ public class GetPerson extends AbstractAwsApiGatewayLambdaFunction<Object, Perso
         // get the 'pathParameters' from input
         Map<String,String> pathParameters =  request.getPathParameters();
         String personId = pathParameters.get("id");
+        logger.info("Retrieving person with ID: " + personId);
         PersonPojo person = personService.get(personId);
         return BasicResponse.<PersonPojo>builder()
                 .statusCode(OK.value())

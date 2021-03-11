@@ -7,8 +7,6 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 @DynamoDBTable(tableName = "person-aws-spring")
 public class Person {
 
-    private static final String PERSON_TABLE_NAME = System.getenv("PERSON_TABLE_NAME");
-
     private String id;
     private String firstName;
     private String lastName;
