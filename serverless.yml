@@ -30,24 +30,24 @@ package:
 
 functions:
   createPerson:
+    environment: # environment variables
+      FUNCTION_NAME: 'createPerson'
     handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
+    name: createPerson
     events: # api gateway
       - http:
           path: person
           method: post
-          cors: true
-    environment: # environment variables
-      FUNCTION_NAME: createPerson
 
   getPerson:
+    environment:
+      FUNCTION_NAME: 'getPerson'
     handler: org.springframework.cloud.function.adapter.aws.SpringBootStreamHandler
-    events: # api gateway
+    name: getPerson
+    events:
       - http:
-        path: person/{id}
-        method: get
-    environment: # environment variables
-      FUNCTION_NAME: getPerson
-
+          path: persons/{id}
+          method: get
 
 # you can add CloudFormation resource templates here
 resources:
@@ -59,13 +59,9 @@ resources:
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
-          - AttributeName: firstName
-            AttributeType: S
         KeySchema:
           - AttributeName: id
             KeyType: HASH
-          - AttributeName: firstName
-            KeyType: RANGE
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
